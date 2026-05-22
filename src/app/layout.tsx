@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Noto_Serif_JP } from "next/font/google";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -12,9 +12,16 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const notoSerifJP = Noto_Serif_JP({
+  variable: "--font-noto-serif-jp",
+  subsets: ["latin"],
+  weight: ["400", "700"],
+});
+
 export const metadata: Metadata = {
-  title: "Sutra Lock",
-  description: "スマホ使用前の儀式型セルフロックアプリ",
+  title: "Sutra Lock — 読むことで、開く。",
+  description:
+    "スマホを開く前に、一度だけ立ち止まるための読誦タイマー。",
 };
 
 export default function RootLayout({
@@ -25,10 +32,10 @@ export default function RootLayout({
   return (
     <html
       lang="ja"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${notoSerifJP.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans">
-        <main className="flex-1 flex flex-col w-full max-w-lg mx-auto">
+        <main className="flex-1 flex flex-col w-full max-w-[720px] mx-auto">
           {children}
         </main>
       </body>

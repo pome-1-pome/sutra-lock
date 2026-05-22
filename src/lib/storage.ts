@@ -13,7 +13,6 @@ export function getDailyRecord(): DailyRecord {
     const raw = localStorage.getItem(KEY);
     if (!raw) return { date: getToday(), count: 0 };
     const record = JSON.parse(raw) as DailyRecord;
-    // Reset count if the date has changed
     if (record.date !== getToday()) {
       return { date: getToday(), count: 0 };
     }
@@ -26,6 +25,12 @@ export function getDailyRecord(): DailyRecord {
 export function incrementDailyCount(): DailyRecord {
   const record = getDailyRecord();
   record.count += 1;
+  localStorage.setItem(KEY, JSON.stringify(record));
+  return record;
+}
+
+export function resetDailyCount(): DailyRecord {
+  const record: DailyRecord = { date: getToday(), count: 0 };
   localStorage.setItem(KEY, JSON.stringify(record));
   return record;
 }

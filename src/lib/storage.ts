@@ -1,80 +1,31 @@
-import type { AppSettings, ChantSession, UnlockState } from "@/types";
+import type { DailyRecord } from "@/types";
 
-const KEYS = {
-  settings: "sutra-lock-settings",
-  history: "sutra-lock-history",
-  unlock: "sutra-lock-unlock",
-} as const;
+const KEY = "sutra-lock-daily";
 
-const DEFAULT_SETTINGS: AppSettings = {
-  pledgeText: "私はスマホに支配されず、自分の意思で行動します。",
-  requiredKeywords: ["スマホ", "意思", "行動"],
-  unlockDurationMinutes: 15,
-};
+function getToday(): string {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
 
-// ---------------------------------------------------------------------------
-// Generic helpers
-// ---------------------------------------------------------------------------
-
-function getItem<T>(key: string): T | null {
-  if (typeof window === "undefined") return null;
+export function getDailyRecord(): DailyRecord {
+  if (typeof window === "undefined") return { date: getToday(), count: 0 };
   try {
-    const raw = localStorage.getItem(key);
-    if (raw === null) return null;
-    return JSON.parse(raw) as T;
+    const raw = localStorage.getItem(KEY);
+    if (!raw) return { date: getToday(), count: 0 };
+    const record = JSON.parse(raw) as DailyRecord;
+    // Reset count if the date has changed
+    if (record.date !== getToday()) {
+      return { date: getToday(), count: 0 };
+    }
+    return record;
   } catch {
-    return null;
+    return { date: getToday(), count: 0 };
   }
 }
 
-function setItem(key: string, value: unknown): void {
-  if (typeof window === "undefined") return;
-  localStorage.setItem(key, JSON.stringify(value));
-}
-
-// ---------------------------------------------------------------------------
-// Settings
-// ---------------------------------------------------------------------------
-
-export function getSettings(): AppSettings {
-  return getItem<AppSettings>(KEYS.settings) ?? DEFAULT_SETTINGS;
-}
-
-export function saveSettings(settings: AppSettings): void {
-  setItem(KEYS.settings, settings);
-}
-
-// ---------------------------------------------------------------------------
-// Chant history
-// ---------------------------------------------------------------------------
-
-export function getHistory(): ChantSession[] {
-  return getItem<ChantSession[]>(KEYS.history) ?? [];
-}
-
-export function addHistory(session: ChantSession): void {
-  const history = getHistory();
-  history.push(session);
-  setItem(KEYS.history, history);
-}
-
-// ---------------------------------------------------------------------------
-// Unlock state
-// ---------------------------------------------------------------------------
-
-export function getUnlockState(): UnlockState {
-  return getItem<UnlockState>(KEYS.unlock) ?? { unlockUntil: null };
-}
-
-export function saveUnlockState(state: UnlockState): void {
-  setItem(KEYS.unlock, state);
-}
-
-/**
- * Returns true if the unlock timer is still active (i.e. not yet expired).
- */
-export function isUnlocked(): boolean {
-  const { unlockUntil } = getUnlockState();
-  if (unlockUntil === null) return false;
-  return Date.now() < unlockUntil;
+export function incrementDailyCount(): DailyRecord {
+  const record = getDailyRecord();
+  record.count += 1;
+  localStorage.setItem(KEY, JSON.stringify(record));
+  return record;
 }

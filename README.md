@@ -33,4 +33,19 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.                                                                  ## Demo
+
+Live Demo: https://あなたのVercelのURL.vercel.app
+
+## Tech Stack
+
+- Next.js
+- React
+- TypeScript
+- Browser Speech Recognition API
+- Vercel
+- GitHub
+
+## Purpose
+
+This app is a portfolio project demonstrating a browser-based voice interaction feature and deployment workflow using GitHub and Vercel.
